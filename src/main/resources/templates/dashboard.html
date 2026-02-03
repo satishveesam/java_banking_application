@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Dashboard - Goldencat Bank</title>
@@ -127,7 +127,7 @@
 <div class="container dashboard-container">
     <div class="text-center">
         <h2 th:text="'Welcome, ' + ${account.username}"></h2>
-        <h3 th:text="'Current Balance: $' + ${account.balance}"></h3>
+        <h3>Current Balance: &#8377;<span th:text="${account.balance}"></span></h3>
     </div>
 
     <!-- Account Details Section -->

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Transaction History - Goldencat Bank</title>
@@ -109,14 +109,15 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="transaction : ${transactions}">
+            <tr th:each="transaction : ${transactions}"
+                th:with="isCredit=${transaction.type != null and (transaction.type.contains('Transfer In') or transaction.type == 'Deposit')}">
                 <td th:text="${transaction.id}"></td>
                 <td th:text="${transaction.type}"></td>
-                <td th:text="${transaction.amount}"
-                    th:classappend="${transaction.type.contains('Transfer In') || transaction.type == 'Deposit'} ? 'text-success' : 'text-danger'">
-                    <span th:text="${transaction.type.contains('Transfer In') || transaction.type == 'Deposit'} ? '+$' + transaction.amount : '-$' + transaction.amount"></span>
+                <td th:classappend="${isCredit} ? 'text-success' : 'text-danger'">
+                    <span th:if="${isCredit}">+&#8377;<span th:text="${transaction.amount}"></span></span>
+                    <span th:unless="${isCredit}">-&#8377;<span th:text="${transaction.amount}"></span></span>
                 </td>
-                <td th:text="${transaction.timestamp}"></td>
+                <td th:text="${transaction.transactionDate}"></td>
             </tr>
             </tbody>
         </table>

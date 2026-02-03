@@ -1,23 +1,27 @@
-# Use an official OpenJDK runtime as a parent image
-FROM openjdk:17-jdk-slim
+# Use modern official Java 17 image
+FROM eclipse-temurin:17-jdk-jammy
 
-# Set the working directory in the container
+# Set working directory
 WORKDIR /app
 
-# Copy the Maven wrapper and pom.xml
+# Copy Maven wrapper and config first (better layer caching)
 COPY mvnw mvnw.cmd pom.xml ./
-
-# Copy the Maven wrapper directory
 COPY .mvn .mvn
 
-# Copy the source code
+# Give execute permission to mvnw
+RUN chmod +x mvnw
+
+# Download dependencies first (faster rebuilds)
+RUN ./mvnw dependency:go-offline
+
+# Copy source code
 COPY src src
 
-# Build the application
+# Build the jar
 RUN ./mvnw clean package -DskipTests
 
-# Expose the port the app runs on
+# Expose port (Render sets PORT env var, but this is fine)
 EXPOSE 8081
 
-# Run the jar file
+# Run the app (Render injects PORT automatically)
 CMD ["java", "-jar", "target/bankapp-0.0.1-SNAPSHOT.jar"]

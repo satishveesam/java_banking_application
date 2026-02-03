@@ -50,6 +50,7 @@ public class AccountService implements UserDetailsService {
         account.setUsername(username);
         account.setPassword(passwordEncoder.encode(password));
         account.setBalance(BigDecimal.ZERO);
+        account.setRole("ROLE_USER");
 
         return accountRepository.save(account);
     }
@@ -123,11 +124,17 @@ public class AccountService implements UserDetailsService {
         return User.builder()
                 .username(account.getUsername())
                 .password(account.getPassword())
-                .authorities(authorities())
+                .authorities(authoritiesFor(account))
                 .build();
     }
 
-    private Collection<? extends GrantedAuthority> authorities() {
-        return Set.of(new SimpleGrantedAuthority("ROLE_USER"));
+    private Collection<? extends GrantedAuthority> authoritiesFor(Account account) {
+        String role = account.getRole();
+        if (role == null || role.isBlank()) {
+            role = "ROLE_USER";
+        } else if (!role.startsWith("ROLE_")) {
+            role = "ROLE_" + role;
+        }
+        return Set.of(new SimpleGrantedAuthority(role));
     }
 }

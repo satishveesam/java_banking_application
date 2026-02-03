@@ -20,6 +20,8 @@ public class Account {
 
     private BigDecimal balance;
 
+    private String role;
+
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<Transaction> transactions;
 
@@ -37,6 +39,10 @@ public class Account {
     public BigDecimal getBalance() { return balance; }
 
     public void setBalance(BigDecimal balance) { this.balance = balance; }
+
+    public String getRole() { return role; }
+
+    public void setRole(String role) { this.role = role; }
 
     public List<Transaction> getTransactions() { return transactions; }
 
